@@ -1,0 +1,29 @@
+{
+  "name": "tree-sitter-cherry",
+  "version": "1.0.0",
+  "description": "A tree-sitter grammar for the Cherry programming language.",
+  "main": "bindings/node",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickolas-pohilets/tree-sitter-cherry.git"
+  },
+  "keywords": [
+    "parser",
+    "cherry"
+  ],
+  "author": "Mykola Pokhylets <mykola.pokhylets@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickolas-pohilets/tree-sitter-cherry/issues"
+  },
+  "homepage": "https://github.com/nickolas-pohilets/tree-sitter-cherry#readme",
+  "dependencies": {
+    "nan": "^2.18.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.8"
+  }
+}
