@@ -6,11 +6,23 @@ module.exports = grammar({
         // $.multiline_comment,
         // $.directive,
         // $.diagnostic,
-        /\s+/, // Whitespace
+        /[ \t]+/, // Whitespace
+    ],
+
+    externals: $ => [
+        $.multiline_comment,
+        $.unterminated_multiline_comment,
     ],
 
     rules: {
-        source_file: $ => repeat($._declaration),
+        source_file: $ => repeat(
+            seq(
+                optional(
+                    $._declaration,
+                ),
+                $._newline,
+            )
+        ),
     
         _declaration: $ => choice(
           $.variable_declaration,
@@ -26,7 +38,7 @@ module.exports = grammar({
             ),
             optional(
                 seq('=', field('initial_value', $._expression)),
-            )
+            ),
         ),
     
         function_declaration: $ => seq(
@@ -113,14 +125,23 @@ module.exports = grammar({
             '[',
             repeat(
                 seq(
-                    $._expression,
+                    optional($._array_literal_row),
+                    $._newline
+                )
+            ),
+            ']'
+        ),
+        _array_literal_row: $ => seq(
+            $._expression,
+            repeat(
+                seq(
                     $._coma,
+                    $._expression,
                 )
             ),
             optional(
-                $._expression,
+                $._coma,
             ),
-            ']'
         ),
 
         dictionary_literal: $ => seq(
@@ -145,7 +166,7 @@ module.exports = grammar({
             field('value', $._expression),
         ),
 
-        _coma: $ => token(choice(/,\n*/, '\n')),
-        _semicolon: $ => token(choice(/;\n*/, '\n')),
+        _newline: $ => /\r?\n|\r/,
+        _coma: $ => token(choice(/,(\r?\n|\r)*/, /\r?\n|\r/)),
       },
 });

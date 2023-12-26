@@ -4,8 +4,25 @@
     "source_file": {
       "type": "REPEAT",
       "content": {
-        "type": "SYMBOL",
-        "name": "_declaration"
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_declaration"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_newline"
+          }
+        ]
       }
     },
     "_declaration": {
@@ -350,12 +367,49 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "_expression"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "_array_literal_row"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
               },
               {
                 "type": "SYMBOL",
+                "name": "_newline"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "_array_literal_row": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_expression"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
                 "name": "_coma"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_expression"
               }
             ]
           }
@@ -365,16 +419,12 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "_expression"
+              "name": "_coma"
             },
             {
               "type": "BLANK"
             }
           ]
-        },
-        {
-          "type": "STRING",
-          "value": "]"
         }
       ]
     },
@@ -449,6 +499,10 @@
         }
       ]
     },
+    "_newline": {
+      "type": "PATTERN",
+      "value": "\\r?\\n|\\r"
+    },
     "_coma": {
       "type": "TOKEN",
       "content": {
@@ -456,27 +510,11 @@
         "members": [
           {
             "type": "PATTERN",
-            "value": ",\\n*"
+            "value": ",(\\r?\\n|\\r)*"
           },
-          {
-            "type": "STRING",
-            "value": "\n"
-          }
-        ]
-      }
-    },
-    "_semicolon": {
-      "type": "TOKEN",
-      "content": {
-        "type": "CHOICE",
-        "members": [
           {
             "type": "PATTERN",
-            "value": ";\\n*"
-          },
-          {
-            "type": "STRING",
-            "value": "\n"
+            "value": "\\r?\\n|\\r"
           }
         ]
       }
@@ -485,12 +523,21 @@
   "extras": [
     {
       "type": "PATTERN",
-      "value": "\\s+"
+      "value": "[ \\t]+"
     }
   ],
   "conflicts": [],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "multiline_comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "unterminated_multiline_comment"
+    }
+  ],
   "inline": [],
   "supertypes": []
 }

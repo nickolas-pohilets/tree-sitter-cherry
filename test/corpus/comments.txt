@@ -1,0 +1,10 @@
+==================
+Comments
+==================
+var x: Bool = 1
+
+---
+
+(source_file
+      (comment)
+      (multiline_comment))
