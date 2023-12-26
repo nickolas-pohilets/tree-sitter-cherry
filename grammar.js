@@ -1,3 +1,17 @@
+function comma_list($, element) {
+    return seq(
+        repeat($._newline),
+        element,
+        repeat(
+            seq(
+                $._comma,
+                element
+            )
+        ),
+        optional($._comma),
+    );
+}
+
 module.exports = grammar({
     name: 'Cherry',
 
@@ -123,41 +137,19 @@ module.exports = grammar({
 
         array_literal: $ => seq(
             '[',
-            repeat(
-                seq(
-                    optional($._array_literal_row),
-                    $._newline
-                )
+            choice(
+                repeat($._newline),
+                comma_list($, $._expression),
             ),
-            ']'
+            ']',
         ),
-        _array_literal_row: $ => seq(
-            $._expression,
-            repeat(
-                seq(
-                    $._coma,
-                    $._expression,
-                )
-            ),
-            optional(
-                $._coma,
-            ),
-        ),
-
         dictionary_literal: $ => seq(
             '[',
-            optional(
-                seq(
-                    $.dictionary_literal_pair,
-                    repeat(
-                        seq(
-                            $._coma,
-                            $.dictionary_literal_pair
-                        )
-                    )
-                )
+            choice(
+                ':',
+                comma_list($, $.dictionary_literal_pair),
             ),
-            ']'
+            ']',
         ),
 
         dictionary_literal_pair: $ => seq(
@@ -167,6 +159,9 @@ module.exports = grammar({
         ),
 
         _newline: $ => /\r?\n|\r/,
-        _coma: $ => token(choice(/,(\r?\n|\r)*/, /\r?\n|\r/)),
+        _comma: $ => choice(
+            seq(',', repeat($._newline)),
+            repeat1($._newline)
+        ),
       },
 });
