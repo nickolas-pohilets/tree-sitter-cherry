@@ -357,6 +357,10 @@
     "named": false
   },
   {
+    "type": "comment",
+    "named": true
+  },
+  {
     "type": "false",
     "named": false
   },
@@ -377,12 +381,20 @@
     "named": false
   },
   {
+    "type": "multiline_comment",
+    "named": true
+  },
+  {
     "type": "return",
     "named": false
   },
   {
     "type": "true",
     "named": false
+  },
+  {
+    "type": "unterminated_multiline_comment",
+    "named": true
   },
   {
     "type": "var",

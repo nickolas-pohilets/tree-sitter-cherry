@@ -1,5 +1,6 @@
 {
   "name": "Cherry",
+  "word": "identifier",
   "rules": {
     "source_file": {
       "type": "REPEAT",
@@ -21,6 +22,26 @@
           {
             "type": "SYMBOL",
             "name": "_newline"
+          }
+        ]
+      }
+    },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "//"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\r\\n]*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\r?\\n|\\r"
           }
         ]
       }
@@ -549,13 +570,29 @@
   },
   "extras": [
     {
-      "type": "PATTERN",
-      "value": "[ \\t]+"
+      "type": "SYMBOL",
+      "name": "_whitespace"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "multiline_comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "unterminated_multiline_comment"
     }
   ],
   "conflicts": [],
   "precedences": [],
   "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "_whitespace"
+    },
     {
       "type": "SYMBOL",
       "name": "multiline_comment"

@@ -1,10 +1,12 @@
 #include <tree_sitter/parser.h>
 #include <cstdint>
 #include <cassert>
+#include <cstdlib>
 
 namespace {
 
 enum TokenType {
+    WHITESPACE,
     MULTILINE_COMMENT,
     UNTERMINATED_MULTILINE_COMMENT,
 };
@@ -32,6 +34,10 @@ struct Serializer {
         ptr += sizeof(T);
     }
 };
+
+bool is_space(int32_t c) {
+    return c == ' ' || c == '\t';
+}
 
 }
 
@@ -64,8 +70,18 @@ extern "C" bool tree_sitter_Cherry_external_scanner_scan(
     TSLexer *lexer,
     const bool *valid_symbols
 ) {
-    uint32_t multiline_comment_depth = 0;
+    // Workaround for https://github.com/tree-sitter/tree-sitter/discussions/884
+
+    if (is_space(lexer->lookahead) && valid_symbols[WHITESPACE]) {
+        do {
+            lexer->advance(lexer, false);
+        } while (is_space(lexer->lookahead));
+        lexer->result_symbol = WHITESPACE;
+        return true;
+    }
+    
     if (lexer->lookahead == '/' && valid_symbols[MULTILINE_COMMENT]) {
+        uint32_t multiline_comment_depth = 0;
         lexer->advance(lexer, false);
         if (lexer->eof(lexer) || lexer->lookahead != '*') {
             return false;
@@ -101,7 +117,7 @@ extern "C" bool tree_sitter_Cherry_external_scanner_scan(
                 lexer->advance(lexer, false);
             }
         }
-    } else {
-        return false;
     }
+
+    return false;
 }

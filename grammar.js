@@ -12,21 +12,27 @@ function comma_list($, element) {
     );
 }
 
+let newlineRE = /\r?\n|\r/;
+
 module.exports = grammar({
     name: 'Cherry',
 
     extras: ($) => [
-        // $.comment,
-        // $.multiline_comment,
+        $._whitespace,
+        $.comment,
+        $.multiline_comment,
+        $.unterminated_multiline_comment,
         // $.directive,
         // $.diagnostic,
-        /[ \t]+/, // Whitespace
     ],
 
     externals: $ => [
+        $._whitespace,
         $.multiline_comment,
         $.unterminated_multiline_comment,
     ],
+
+    word: $ => $.identifier,
 
     rules: {
         source_file: $ => repeat(
@@ -37,6 +43,8 @@ module.exports = grammar({
                 $._newline,
             )
         ),
+
+        comment: $ => token(seq('//', /[^\r\n]*/, newlineRE)),
     
         _declaration: $ => choice(
           $.variable_declaration,
@@ -158,7 +166,7 @@ module.exports = grammar({
             field('value', $._expression),
         ),
 
-        _newline: $ => /\r?\n|\r/,
+        _newline: $ => newlineRE,
         _comma: $ => choice(
             seq(',', repeat($._newline)),
             repeat1($._newline)

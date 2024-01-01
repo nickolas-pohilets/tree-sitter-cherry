@@ -1,0 +1,17 @@
+==================
+Embedded Comments
+==================
+let x /* comment */:Bool
+let x /* comment */ = 1
+
+---
+
+ (source_file
+      (variable_declaration
+        (identifier)
+        (multiline_comment)
+        (builtin_type))
+      (variable_declaration
+        (identifier)
+        (multiline_comment)
+        (integer_literal)))
